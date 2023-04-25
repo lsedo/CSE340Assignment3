@@ -4,12 +4,13 @@
 #include "token.h"
 #include "tokenList.h"
 #include "tokenType.h"
+#include <cstring>
+#include <iostream>
 
 #define SUCCESS 1
 #define FAIL	0
 
 int a = 1;
-std::vector<int> evalPoints;
 
 int checkSyntax(TokenList* tkList)
 {
@@ -38,6 +39,7 @@ int variables(TokenList* tkList)
 			return SUCCESS;
 		}
 	}
+	return FAIL;
 }
 
 int idList(TokenList* tkList)
@@ -81,36 +83,12 @@ int body(TokenList* tkList)
 	return FAIL;
 }
 
-int idList(TokenList* tkList)
-{
-	if(tkList->GetToken(a)->GetType() == ID)
-	{
-		a++;
-		while(tkList->GetToken(a)->GetType() == COMMA)
-		{
-			a++;
-			if(tkList->GetToken(a)->GetType() == ID)
-			{
-				a++;
-			}
-			else
-			{
-				return FAIL;
-			}
-		}
-
-		return SUCCESS;
-	}
-	return FAIL;
-}
-
 int statementList(TokenList* tkList)
 {
 	if(statement(tkList))
 	{
 		while(statement(tkList))
 		{
-
 		}
 		return SUCCESS;
 	}
@@ -119,8 +97,10 @@ int statementList(TokenList* tkList)
 
 int statement(TokenList* tkList)
 {
+	printf("%d statement\n", a);
 	if(whileStatement(tkList) 
-	|| assignStatement(tkList) 
+	|| assignStatement(tkList)
+	|| ifStatement(tkList) 
 	|| switchStatement(tkList)
 	|| printStatement(tkList))
 	{
@@ -149,11 +129,13 @@ int assignStatement(TokenList* tkList)
 {
 	if(tkList->GetToken(a)->GetType() == ID)
 	{
+		printf("%d\n", strcmp(tkList->GetToken(a)->GetString(), PRINT_TOKEN_STRING));
+		printf("%s\n", tkList->GetToken(a)->GetString());
 		a++;
 		if(tkList->GetToken(a)->GetType() == EQUAL)
 		{
 			a++;
-			if(primary(tkList) || expression(tkList)
+			if(primary(tkList) || expression(tkList))
 			{
 				if(tkList->GetToken(a)->GetType() == SEMICOLON)
 				{
@@ -184,6 +166,7 @@ int ifStatement(TokenList* tkList)
 
 int printStatement(TokenList* tkList)
 {
+	printf("%d printStatement\n", a);
 	if(tkList->GetToken(a)->GetType() == PRINT)
 	{
 		a++;
@@ -253,7 +236,7 @@ int expression(TokenList* tkList)
 
 int conditional(TokenList* tkList)
 {
-	if(primary(tkList)
+	if(primary(tkList))
 	{
 		if(relationalOperator(tkList))
 		{
@@ -304,9 +287,9 @@ int relationalOperator(TokenList* tkList)
 
 int caseList(TokenList* tkList)
 {
-	if(case(tkList))
+	if(caseInd(tkList))
 	{
-		while(case(tkList))
+		while(caseInd(tkList))
 		{
 		
 		}
@@ -315,7 +298,7 @@ int caseList(TokenList* tkList)
 	return FAIL;
 }
 
-int case(TokenList* tkList)
+int caseInd(TokenList* tkList)
 {
 	if(tkList->GetToken(a)->GetType() == CASE)
 	{

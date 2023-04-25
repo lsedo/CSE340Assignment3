@@ -4,8 +4,6 @@
 #include "tokenList.h"
 #include <vector>
 
-extern std::vector<int> evalPoints;
-
 int checkSyntax(TokenList* tkList);
 
 int program(TokenList* tkList);
@@ -25,7 +23,7 @@ int primary(TokenList* tkList);
 int op(TokenList* tkList);
 int relationalOperator(TokenList* tkList);
 int caseList(TokenList* tkList);
-int case(TokenList* tkList);
+int caseInd(TokenList* tkList);
 int defaultCase(TokenList* tkList);
 
 
